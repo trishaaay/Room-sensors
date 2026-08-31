@@ -1,0 +1,1530 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width,initial-scale=1"
+>
+
+<title>Mini Room Monitor</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+
+    background:
+        linear-gradient(
+            135deg,
+            #667eea 0%,
+            #764ba2 100%
+        );
+
+    min-height:100vh;
+
+    padding:20px;
+
+    color:#333;
+}
+
+
+.container{
+
+    max-width:1000px;
+
+    margin:0 auto;
+}
+
+
+/* =====================================================
+   HEADER
+   ===================================================== */
+
+header{
+
+    background:#fff;
+
+    border-radius:20px;
+
+    padding:20px 30px;
+
+    margin-bottom:20px;
+
+    box-shadow:
+        0 4px 20px rgba(0,0,0,0.1);
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    flex-wrap:wrap;
+}
+
+
+h1{
+
+    font-size:1.6rem;
+
+    font-weight:700;
+
+    color:#667eea;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+}
+
+
+.update-time{
+
+    font-size:0.85rem;
+
+    color:#666;
+
+    margin-top:4px;
+}
+
+
+.controls{
+
+    display:flex;
+
+    gap:10px;
+}
+
+
+.btn-icon{
+
+    width:40px;
+
+    height:40px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#f3f4f6;
+
+    cursor:pointer;
+
+    font-size:1.2rem;
+
+    transition:all 0.3s;
+}
+
+
+.btn-icon:hover{
+
+    background:#e5e7eb;
+
+    transform:translateY(-2px);
+}
+
+
+/* =====================================================
+   CONNECTION STATUS
+   ===================================================== */
+
+.connection{
+
+    display:inline-block;
+
+    padding:6px 12px;
+
+    border-radius:20px;
+
+    font-size:0.8rem;
+
+    font-weight:600;
+
+    background:#fee2e2;
+
+    color:#991b1b;
+
+    margin-top:8px;
+}
+
+
+.connection.connected{
+
+    background:#d1fae5;
+
+    color:#065f46;
+}
+
+
+/* =====================================================
+   METRICS
+   ===================================================== */
+
+.metrics{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(250px,1fr)
+        );
+
+    gap:20px;
+
+    margin-bottom:20px;
+}
+
+
+.metric-card{
+
+    border-radius:20px;
+
+    padding:25px;
+
+    color:#fff;
+
+    box-shadow:
+        0 4px 20px rgba(0,0,0,0.15);
+
+    transition:transform 0.3s;
+}
+
+
+.metric-card:hover{
+
+    transform:translateY(-5px);
+}
+
+
+.metric-card.temp{
+
+    background:
+        linear-gradient(
+            135deg,
+            #FA709A 0%,
+            #FEE140 100%
+        );
+}
+
+
+.metric-card.humidity{
+
+    background:
+        linear-gradient(
+            135deg,
+            #4facfe 0%,
+            #00f2fe 100%
+        );
+}
+
+
+.metric-card.gas{
+
+    background:
+        linear-gradient(
+            135deg,
+            #667eea 0%,
+            #764ba2 100%
+        );
+}
+
+
+.metric-label{
+
+    font-size:0.9rem;
+
+    font-weight:600;
+
+    opacity:0.9;
+
+    margin-bottom:10px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:6px;
+}
+
+
+.metric-value{
+
+    font-size:2.8rem;
+
+    font-weight:700;
+
+    line-height:1;
+}
+
+
+.gas-info{
+
+    margin-top:15px;
+
+    font-size:0.78rem;
+
+    line-height:1.5;
+
+    opacity:0.95;
+}
+
+
+/* =====================================================
+   GENERAL CARDS
+   ===================================================== */
+
+.card{
+
+    background:#fff;
+
+    border-radius:20px;
+
+    padding:25px;
+
+    margin-bottom:20px;
+
+    box-shadow:
+        0 4px 20px rgba(0,0,0,0.1);
+}
+
+
+.card-title{
+
+    font-size:1.2rem;
+
+    font-weight:700;
+
+    margin-bottom:15px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    color:#333;
+}
+
+
+/* =====================================================
+   AI BUTTON
+   ===================================================== */
+
+.btn-primary{
+
+    width:100%;
+
+    padding:14px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #667eea 0%,
+            #764ba2 100%
+        );
+
+    color:#fff;
+
+    font-weight:700;
+
+    font-size:1rem;
+
+    cursor:pointer;
+
+    transition:all 0.3s;
+}
+
+
+.btn-primary:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:
+        0 6px 20px
+        rgba(102,126,234,0.4);
+}
+
+
+.btn-primary:disabled{
+
+    opacity:0.6;
+
+    cursor:not-allowed;
+
+    transform:none;
+}
+
+
+/* =====================================================
+   AI RESULT
+   ===================================================== */
+
+#ai{
+
+    min-height:80px;
+
+    padding:18px;
+
+    background:#f9fafb;
+
+    border-radius:12px;
+
+    margin-top:15px;
+
+    white-space:pre-wrap;
+
+    font-size:0.95rem;
+
+    line-height:1.8;
+
+    color:#1f2937;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+}
+
+
+/* =====================================================
+   WEATHER
+   ===================================================== */
+
+.weather-input{
+
+    display:flex;
+
+    gap:10px;
+
+    margin-bottom:15px;
+}
+
+
+.weather-input input{
+
+    flex:1;
+
+    padding:12px;
+
+    border:
+        2px solid #e5e7eb;
+
+    border-radius:10px;
+
+    font-size:0.95rem;
+}
+
+
+.weather-input button{
+
+    padding:12px 20px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#667eea;
+
+    color:#fff;
+
+    font-weight:600;
+
+    cursor:pointer;
+}
+
+
+#weather{
+
+    padding:15px;
+
+    background:#f0f9ff;
+
+    border-radius:12px;
+
+    margin-top:12px;
+
+    font-size:0.95rem;
+
+    color:#075985;
+}
+
+
+#comparison{
+
+    padding:15px;
+
+    background:#fef3c7;
+
+    border-radius:12px;
+
+    margin-top:12px;
+
+    font-size:0.95rem;
+
+    color:#78350f;
+}
+
+
+/* =====================================================
+   LOADING
+   ===================================================== */
+
+.loading{
+
+    display:inline-block;
+
+    width:16px;
+
+    height:16px;
+
+    border:
+        3px solid
+        rgba(255,255,255,0.3);
+
+    border-top-color:#fff;
+
+    border-radius:50%;
+
+    animation:
+        spin 0.8s linear infinite;
+}
+
+
+@keyframes spin{
+
+    to{
+        transform:rotate(360deg);
+    }
+
+}
+
+
+/* =====================================================
+   MOBILE
+   ===================================================== */
+
+@media(max-width:768px){
+
+    h1{
+
+        font-size:1.3rem;
+
+    }
+
+
+    .metric-value{
+
+        font-size:2.2rem;
+
+    }
+
+
+    .metrics{
+
+        grid-template-columns:1fr;
+
+    }
+
+
+    .weather-input{
+
+        flex-direction:column;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+<!-- ===================================================
+     HEADER
+     =================================================== -->
+
+<header>
+
+<div>
+
+<h1>
+
+🏠 Mini Room Monitor
+
+</h1>
+
+
+<div
+    class="update-time"
+    id="lastUpdate"
+>
+
+Last updated: --
+
+</div>
+
+
+<div
+    id="connection"
+    class="connection"
+>
+
+Arduino Disconnected
+
+</div>
+
+</div>
+
+
+<div class="controls">
+
+
+<button
+    class="btn-icon"
+    onclick="toggleDarkMode()"
+    title="Toggle theme"
+>
+
+🌙
+
+</button>
+
+
+<button
+    class="btn-icon"
+    onclick="updateData()"
+    title="Refresh"
+>
+
+↻
+
+</button>
+
+
+</div>
+
+</header>
+
+
+
+<!-- ===================================================
+     SENSOR METRICS
+     =================================================== -->
+
+<div class="metrics">
+
+
+<!-- TEMPERATURE -->
+
+<div class="metric-card temp">
+
+<div class="metric-label">
+
+🌡️ Temperature
+
+</div>
+
+
+<div
+    class="metric-value"
+    id="temp"
+>
+
+--
+
+</div>
+
+</div>
+
+
+
+<!-- HUMIDITY -->
+
+<div class="metric-card humidity">
+
+<div class="metric-label">
+
+💧 Humidity
+
+</div>
+
+
+<div
+    class="metric-value"
+    id="hum"
+>
+
+--
+
+</div>
+
+</div>
+
+
+
+<!-- MQ-135 -->
+
+<div class="metric-card gas">
+
+<div class="metric-label">
+
+🧪 MQ-135 Gas Sensor
+
+</div>
+
+
+<div
+    class="metric-value"
+    id="gas"
+>
+
+--
+
+</div>
+
+
+<div class="gas-info">
+
+<strong>
+Raw sensor value
+</strong>
+
+
+<br>
+<br>
+
+
+<strong>
+MQ-135 sensitivity:
+</strong>
+
+
+<br>
+
+
+NH₃ • NOₓ • Benzene vapors
+• Smoke • Sulfide gases
+
+
+<br>
+<br>
+
+
+This is a raw sensor reading,
+not an AQI or individual gas
+concentration in ppm.
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- ===================================================
+     AI SUGGESTIONS
+     =================================================== -->
+
+<div class="card">
+
+
+<div class="card-title">
+
+🤖 AI Suggestions
+
+</div>
+
+
+<button
+    class="btn-primary"
+    onclick="getAI()"
+    id="aiBtn"
+>
+
+Get AI Advice
+
+</button>
+
+
+<div id="ai">
+
+Click the button above to get
+AI-powered suggestions based on
+your current room readings.
+
+</div>
+
+</div>
+
+
+
+<!-- ===================================================
+     OUTDOOR WEATHER COMPARISON
+     =================================================== -->
+
+<div class="card">
+
+
+<div class="card-title">
+
+🌍 Outdoor Weather Comparison
+
+</div>
+
+
+<div
+    style="
+        font-size:0.9rem;
+        color:#666;
+        margin-bottom:12px;
+    "
+>
+
+Enter a city to compare outdoor
+conditions with your indoor sensors.
+
+</div>
+
+
+<div class="weather-input">
+
+
+<input
+    id="city"
+    type="text"
+    placeholder="Enter city name"
+    value="Kolkata"
+>
+
+
+<button
+    onclick="getWeather()"
+>
+
+Get Weather
+
+</button>
+
+
+</div>
+
+
+<div id="weather"></div>
+
+
+<div id="comparison"></div>
+
+
+</div>
+
+
+</div>
+
+
+
+<script>
+
+
+// =====================================================
+// SENSOR DATA
+// =====================================================
+
+let sensorData = {
+
+    temperature: null,
+
+    humidity: null,
+
+    mq135_raw: null
+
+};
+
+
+
+// =====================================================
+// UPDATE SENSOR DATA
+// =====================================================
+
+async function updateData(){
+
+    try{
+
+        const response =
+            await fetch("/data");
+
+
+        if(!response.ok){
+
+            throw new Error(
+                "Server returned "
+                + response.status
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        sensorData = data;
+
+
+
+        // =============================================
+        // TEMPERATURE
+        // =============================================
+
+        if(
+            data.temperature !== null &&
+            data.temperature !== undefined
+        ){
+
+            document
+                .getElementById("temp")
+                .innerText =
+                    Number(
+                        data.temperature
+                    ).toFixed(1)
+                    + "°C";
+
+        }else{
+
+            document
+                .getElementById("temp")
+                .innerText =
+                    "--";
+
+        }
+
+
+
+        // =============================================
+        // HUMIDITY
+        // =============================================
+
+        if(
+            data.humidity !== null &&
+            data.humidity !== undefined
+        ){
+
+            document
+                .getElementById("hum")
+                .innerText =
+                    Number(
+                        data.humidity
+                    ).toFixed(1)
+                    + "%";
+
+        }else{
+
+            document
+                .getElementById("hum")
+                .innerText =
+                    "--";
+
+        }
+
+
+
+        // =============================================
+        // MQ-135
+        // =============================================
+
+        if(
+            data.mq135_raw !== null &&
+            data.mq135_raw !== undefined
+        ){
+
+            document
+                .getElementById("gas")
+                .innerText =
+                    data.mq135_raw;
+
+        }else{
+
+            document
+                .getElementById("gas")
+                .innerText =
+                    "--";
+
+        }
+
+
+
+        // =============================================
+        // CONNECTION STATUS
+        // =============================================
+
+        const connection =
+            document.getElementById(
+                "connection"
+            );
+
+
+        connection.innerText =
+            "Arduino Connected";
+
+
+        connection.classList.add(
+            "connected"
+        );
+
+
+
+        // =============================================
+        // LAST UPDATE
+        // =============================================
+
+        document
+            .getElementById(
+                "lastUpdate"
+            )
+            .textContent =
+                "Last updated: "
+                +
+                new Date()
+                    .toLocaleTimeString();
+
+
+    }catch(error){
+
+        console.error(error);
+
+
+        const connection =
+            document.getElementById(
+                "connection"
+            );
+
+
+        connection.innerText =
+            "Arduino Disconnected";
+
+
+        connection.classList.remove(
+            "connected"
+        );
+
+    }
+
+}
+
+
+
+// =====================================================
+// AI SUGGESTIONS
+// =====================================================
+
+async function getAI(){
+
+    const button =
+        document.getElementById(
+            "aiBtn"
+        );
+
+
+    const ai =
+        document.getElementById(
+            "ai"
+        );
+
+
+    button.innerHTML =
+        '<span class="loading"></span> Analyzing...';
+
+
+    button.disabled = true;
+
+
+    ai.textContent =
+        "Analyzing your environmental data...";
+
+
+    try{
+
+        // Refresh the sensor data before asking
+        // the AI for suggestions.
+
+        await updateData();
+
+
+        const response =
+            await fetch(
+                "/ai",
+                {
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify(
+                            sensorData
+                        )
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if(!response.ok){
+
+            throw new Error(
+                data.text ||
+                "AI request failed"
+            );
+
+        }
+
+
+        ai.textContent =
+            data.text ||
+            "No AI response received.";
+
+
+    }catch(error){
+
+        console.error(error);
+
+
+        ai.textContent =
+            "Unable to get AI suggestions.\n\n"
+            +
+            error.message;
+
+
+    }finally{
+
+        button.innerHTML =
+            "Get AI Advice";
+
+
+        button.disabled =
+            false;
+
+    }
+
+}
+
+
+
+// =====================================================
+// SIGNED DIFFERENCE
+// =====================================================
+
+function signedStr(value){
+
+    return (
+        value > 0
+            ? "+"
+            : ""
+    )
+    +
+    value.toFixed(1);
+
+}
+
+
+
+// =====================================================
+// OUTDOOR WEATHER
+// =====================================================
+
+async function getWeather(){
+
+    const city =
+        document
+            .getElementById(
+                "city"
+            )
+            .value
+            .trim();
+
+
+    const weather =
+        document.getElementById(
+            "weather"
+        );
+
+
+    const comparison =
+        document.getElementById(
+            "comparison"
+        );
+
+
+    if(!city){
+
+        weather.innerHTML =
+            "Please enter a city.";
+
+        comparison.innerHTML =
+            "";
+
+        return;
+
+    }
+
+
+    weather.innerHTML =
+        "🌐 Fetching weather data...";
+
+
+    comparison.innerHTML =
+        "";
+
+
+    try{
+
+        // =============================================
+        // GEOCODING
+        // =============================================
+
+        const geoResponse =
+            await fetch(
+                "https://geocoding-api.open-meteo.com/v1/search?name="
+                +
+                encodeURIComponent(
+                    city
+                )
+                +
+                "&count=1"
+                +
+                "&language=en"
+                +
+                "&format=json"
+            );
+
+
+        if(!geoResponse.ok){
+
+            throw new Error(
+                "Geocoding request failed"
+            );
+
+        }
+
+
+        const geo =
+            await geoResponse.json();
+
+
+        if(
+            !geo.results ||
+            geo.results.length === 0
+        ){
+
+            weather.innerHTML =
+                "❌ City not found.";
+
+            return;
+
+        }
+
+
+        const location =
+            geo.results[0];
+
+
+        const latitude =
+            location.latitude;
+
+
+        const longitude =
+            location.longitude;
+
+
+
+        // =============================================
+        // WEATHER REQUEST
+        // =============================================
+
+        const weatherResponse =
+            await fetch(
+
+                "https://api.open-meteo.com/v1/forecast"
+                +
+                "?latitude="
+                +
+                latitude
+                +
+                "&longitude="
+                +
+                longitude
+                +
+                "&current="
+                +
+                "temperature_2m,"
+                +
+                "relative_humidity_2m"
+                +
+                "&timezone=auto"
+
+            );
+
+
+        if(!weatherResponse.ok){
+
+            throw new Error(
+                "Weather request failed"
+            );
+
+        }
+
+
+        const weatherData =
+            await weatherResponse.json();
+
+
+        const outdoorTemperature =
+            weatherData
+                .current
+                .temperature_2m;
+
+
+        const outdoorHumidity =
+            weatherData
+                .current
+                .relative_humidity_2m;
+
+
+
+        // =============================================
+        // DISPLAY OUTDOOR DATA
+        // =============================================
+
+        weather.innerHTML =
+            "<strong>🌍 Outdoor ("
+            +
+            location.name
+            +
+            "):</strong><br>"
+            +
+            "Temperature: "
+            +
+            Number(
+                outdoorTemperature
+            ).toFixed(1)
+            +
+            " °C<br>"
+            +
+            "Humidity: "
+            +
+            Number(
+                outdoorHumidity
+            ).toFixed(1)
+            +
+            "%";
+
+
+
+        // =============================================
+        // INDOOR COMPARISON
+        // =============================================
+
+        if(
+            sensorData.temperature !== null &&
+            sensorData.temperature !== undefined &&
+            sensorData.humidity !== null &&
+            sensorData.humidity !== undefined
+        ){
+
+            const temperatureDifference =
+                outdoorTemperature
+                -
+                Number(
+                    sensorData.temperature
+                );
+
+
+            const humidityDifference =
+                outdoorHumidity
+                -
+                Number(
+                    sensorData.humidity
+                );
+
+
+            comparison.innerHTML =
+                "<strong>"
+                +
+                "🏠 Indoor (Your Sensors):"
+                +
+                "</strong><br>"
+                +
+                "Temperature: "
+                +
+                Number(
+                    sensorData.temperature
+                ).toFixed(1)
+                +
+                " °C<br>"
+                +
+                "Humidity: "
+                +
+                Number(
+                    sensorData.humidity
+                ).toFixed(1)
+                +
+                "%<br><br>"
+                +
+                "<strong>"
+                +
+                "📊 Difference (Outdoor - Indoor):"
+                +
+                "</strong><br>"
+                +
+                "Temperature: "
+                +
+                signedStr(
+                    temperatureDifference
+                )
+                +
+                " °C<br>"
+                +
+                "Humidity: "
+                +
+                signedStr(
+                    humidityDifference
+                )
+                +
+                "%";
+
+        }else{
+
+            comparison.innerHTML =
+                "<em>"
+                +
+                "Indoor sensor readings "
+                +
+                "are currently unavailable."
+                +
+                "</em>";
+
+        }
+
+
+    }catch(error){
+
+        console.error(error);
+
+
+        weather.innerHTML =
+            "❌ Unable to fetch weather data.";
+
+
+        comparison.innerHTML =
+            error.message;
+
+    }
+
+}
+
+
+
+// =====================================================
+// DARK MODE
+// =====================================================
+
+function toggleDarkMode(){
+
+    const isDark =
+        document.body.dataset.dark
+        ===
+        "true";
+
+
+    if(isDark){
+
+        document.body.style.background =
+            "linear-gradient("
+            +
+            "135deg,"
+            +
+            "#667eea 0%,"
+            +
+            "#764ba2 100%"
+            +
+            ")";
+
+
+        document.body.dataset.dark =
+            "false";
+
+
+    }else{
+
+        document.body.style.background =
+            "linear-gradient("
+            +
+            "135deg,"
+            +
+            "#1a1a2e 0%,"
+            +
+            "#16213e 100%"
+            +
+            ")";
+
+
+        document.body.dataset.dark =
+            "true";
+
+    }
+
+}
+
+
+
+// =====================================================
+// INITIAL LOAD
+// =====================================================
+
+updateData();
+
+
+setInterval(
+    updateData,
+    3000
+);
+
+</script>
+
+
+</body>
+
+</html>
